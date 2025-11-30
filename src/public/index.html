@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>SIM BUILDER!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .form-container {
+      width: 350px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .saved-btn {
+      background: #28a745 !important;
+      margin-top: 10px;
+    }
+
+    .saved-btn:hover {
+      background: #1e7e34 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>SIM BUILDER</h2>
+
+    <form action="/submit-sim" method="POST" enctype="multipart/form-data">
+
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" name="nama" required>
+
+      <label for="tempat_lahir">Tempat Lahir</label>
+      <input type="text" id="tempat_lahir" name="tempat_lahir" required>
+
+      <label for="tanggal_lahir">Tanggal Lahir</label>
+      <input type="date" id="tanggal_lahir" name="tanggal_lahir" required>
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="">Pilih gender...</option>
+        <option value="Laki-laki">Laki-laki</option>
+        <option value="Perempuan">Perempuan</option>
+      </select>
+
+      <label for="tinggi">Tinggi Badan (cm)</label>
+      <input type="number" id="tinggi" name="tinggi" required>
+
+      <label for="pekerjaan">Pekerjaan</label>
+      <input type="text" id="pekerjaan" name="pekerjaan" required>
+
+      <label for="no_sim">No. SIM</label>
+      <input type="text" id="no_sim" name="no_sim" required>
+
+      <label for="berlaku_sd">Berlaku s/d</label>
+      <input type="date" id="berlaku_sd" name="berlaku_sd" required>
+
+      <label for="foto">Foto</label>
+      <input type="file" id="foto" name="foto" accept="image/*" required>
+
+      <button type="submit">Save SIM</button>
+    </form>
+
+    <button class="saved-btn" onclick="window.location.href='/saved'">List SIM Terbuat</button>
+
+  </div>
+
+</body>
+</html>
