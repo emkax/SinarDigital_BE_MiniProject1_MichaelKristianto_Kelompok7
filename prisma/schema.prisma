@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  LAKI
+  PEREMPUAN
+}
+
+model Pemilik {
+  id            Int       @id @default(autoincrement())
+  nama          String
+  nik           String    @unique
+  alamat        String?
+  tanggal_lahir DateTime?
+  tempat_lahir  String?
+  gender        Gender
+  pekerjaan     String?
+  tinggi        Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sims          SIM[]     // Relasi: 1 pemilik bisa punya banyak SIM
+
+  @@map("pemilik")
+}
+
+model SIM {
+  id            Int       @id @default(autoincrement())
+  nama          String
+  tempatLahir   String?
+  tanggal_lahir DateTime?
+  gender        Gender
+  tinggi        Int
+  pekerjaan     String
+  noSim         String    @unique
+  berlakuSd     DateTime?
+  foto          String?   // Path ke file foto
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relasi ke Pemilik
+  pemilikId     Int
+  pemilik       Pemilik   @relation(fields: [pemilikId], references: [id], onDelete: Cascade)
+
+  @@map("sim")
+}

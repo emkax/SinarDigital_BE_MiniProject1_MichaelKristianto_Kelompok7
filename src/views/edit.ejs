@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit SIM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .current-image {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .current-image img {
+      max-width: 200px;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .image-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    button, .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button[type="submit"] {
+      background: #28a745;
+      color: white;
+    }
+
+    button[type="submit"]:hover {
+      background: #218838;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+      padding: 8px 15px;
+      font-size: 13px;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .checkbox-container input {
+      width: auto;
+      margin-top: 0;
+    }
+
+    .file-info {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>✏️ Edit Data SIM</h2>
+
+    <% if (sim.foto) { %>
+      <div class="current-image">
+        <p><strong>Foto Saat Ini:</strong></p>
+        <img src="<%= sim.foto %>" alt="Foto SIM">
+        <div class="image-actions">
+          <button class="btn-danger" onclick="deleteFoto(<%= sim.id %>)">
+            Hapus Foto
+          </button>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="file-info">
+        Belum ada foto
+      </div>
+    <% } %>
+
+    <form action="/sim/update/<%= sim.id %>" method="POST" enctype="multipart/form-data">
+
+      <label for="nama">Nama *</label>
+      <input type="text" id="nama" name="nama" value="<%= sim.nama %>" required>
+
+      <label for="tempat_lahir">Tempat Lahir *</label>
+      <input type="text" id="tempat_lahir" name="tempat_lahir" value="<%= sim.tempatLahir %>" required>
+
+      <label for="tanggal_lahir">Tanggal Lahir *</label>
+      <input type="date" id="tanggal_lahir" name="tanggal_lahir" 
+             value="<%= sim.tanggal_lahir ? sim.tanggal_lahir.toISOString().split('T')[0] : '' %>" required>
+
+      <label for="gender">Gender *</label>
+      <select id="gender" name="gender" required>
+        <option value="">Pilih gender...</option>
+        <option value="Laki-laki" <%= sim.gender === 'LAKI' ? 'selected' : '' %>>Laki-laki</option>
+        <option value="Perempuan" <%= sim.gender === 'PEREMPUAN' ? 'selected' : '' %>>Perempuan</option>
+      </select>
+
+      <label for="tinggi">Tinggi Badan (cm) *</label>
+      <input type="number" id="tinggi" name="tinggi" value="<%= sim.tinggi %>" required>
+
+      <label for="pekerjaan">Pekerjaan *</label>
+      <input type="text" id="pekerjaan" name="pekerjaan" value="<%= sim.pekerjaan %>" required>
+
+      <label for="no_sim">No. SIM *</label>
+      <input type="text" id="no_sim" name="no_sim" value="<%= sim.noSim %>" required>
+
+      <label for="berlaku_sd">Berlaku s/d</label>
+      <input type="date" id="berlaku_sd" name="berlaku_sd" 
+             value="<%= sim.berlakuSd ? sim.berlakuSd.toISOString().split('T')[0] : '' %>">
+
+      <label for="foto">Upload Foto Baru (Opsional)</label>
+      <input type="file" id="foto" name="foto" accept="image/*">
+      <div class="file-info">
+        Max 5MB, format: JPG, PNG, GIF
+      </div>
+
+      <% if (sim.foto) { %>
+        <div class="checkbox-container">
+          <input type="checkbox" id="keep_foto" name="keep_foto" value="true" checked>
+          <label for="keep_foto" style="margin-top: 0;">Pertahankan foto lama jika tidak upload baru</label>
+        </div>
+      <% } %>
+
+      <div class="form-actions">
+        <a href="/sim/saved" class="btn btn-secondary">Batal</a>
+        <button type="submit">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    async function deleteFoto(simId) {
+      if (!confirm('Yakin ingin menghapus foto ini?')) return;
+
+      try {
+        const response = await fetch(`/sim/delete-foto/${simId}`, {
+          method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('Foto berhasil dihapus!');
+          location.reload();
+        } else {
+          alert('Gagal menghapus foto: ' + data.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+  </script>
+
+</body>
+</html>
